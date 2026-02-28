@@ -1,3 +1,32 @@
+/**
+ * Modifie un produit existant (PUT /products/:id)
+ * @param {string} id - ID du produit
+ * @param {Object} productData - Les données du produit (clé/valeur)
+ * @param {File} image - Fichier image à uploader
+ * @param {string} token - Token d'authentification
+ * @returns {Promise}
+ */
+export const updateProduct = async (id, productData, image, token) => {
+    const formData = new FormData();
+    Object.entries(productData).forEach(([key, value]) => {
+        formData.append(key, value);
+    });
+    if (image) {
+        formData.append('image', image);
+    }
+    const response = await axiosInstance.put(
+        `/api/v1/products/${id}`,
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                ...(token && { Authorization: `Bearer ${token}` }),
+                'accept': '*/*',
+            },
+        }
+    );
+    return response.data;
+};
 import axiosInstance from './axios.config';
 
 /**
