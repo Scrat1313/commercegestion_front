@@ -14,8 +14,8 @@ export const updateProduct = async (id, productData, image, token) => {
     if (image) {
         formData.append('image', image);
     }
-    const response = await axiosInstance.put(
-        `/api/v1/products/${id}`,
+    const response = await axiosInstance.patch(
+        `/api/v1/products/update/${id}`,
         formData,
         {
             headers: {
