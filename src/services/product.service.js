@@ -1,3 +1,5 @@
+import axiosInstance from './axios.config';
+
 /**
  * Modifie un produit existant (PUT /products/:id)
  * @param {string} id - ID du produit
@@ -27,7 +29,6 @@ export const updateProduct = async (id, productData, image, token) => {
     );
     return response.data;
 };
-import axiosInstance from './axios.config';
 
 /**
  * Récupère la liste des produits avec filtres
@@ -131,6 +132,25 @@ export const toggleProductStocker = async (id, token) => {
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
+                'accept': '*/*',
+            },
+        }
+    );
+    return response.data;
+};
+
+/**
+ * Supprime un produit par son ID (DELETE /products/delete/:id)
+ * @param {string} id - ID du produit
+ * @param {string} token - Token d'authentification
+ * @returns {Promise}
+ */
+export const deleteProduct = async (id, token) => {
+    const response = await axiosInstance.delete(
+        `/api/v1/products/delete/${id}`,
+        {
+            headers: {
+                ...(token && { Authorization: `Bearer ${token}` }),
                 'accept': '*/*',
             },
         }

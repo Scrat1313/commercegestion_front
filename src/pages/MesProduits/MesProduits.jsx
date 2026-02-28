@@ -10,12 +10,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'sonner';
 import usePageTitle from '../../utils/usePageTitle.jsx';
-import { getMyProducts, toggleProductStocker, getProductById, createProduct, updateProduct } from '../../services/product.service';
+import { getMyProducts, toggleProductStocker, getProductById, createProduct, updateProduct, deleteProduct } from '../../services/product.service';
 import { getFullMediaUrl } from '../../services/media.service';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '../../components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from '../../components/ui/dialog';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '../../components/ui/select';
 import { Label } from '../../components/ui/label';
 import { getAllCpcSelect } from '../../services/cpc.service';
+import { getAllUsersSelect } from '../../services/user.service';
 import { depositStock } from '../../services/stocks_move.service.js';
 import { getMySites } from '../../services/site.service';
 
@@ -31,6 +32,12 @@ const MesProduits = () => {
       // const token = localStorage.getItem('token');
       const res = await getMySites({ limit: 100, page: 1 });
       setSites(res.data || []);
+      try {
+        const usersRes = await getAllUsersSelect();
+        setUsersOptions(Array.isArray(usersRes.data) ? usersRes.data : usersRes.data || []);
+      } catch (errUsers) {
+        setUsersOptions([]);
+      }
     } catch (err) {
       toast.error('Erreur lors du chargement des sites');
       setSites([]);
@@ -56,6 +63,8 @@ const MesProduits = () => {
         productId: '',
         quantite: '',
         prixUnitaire: '',
+        detentaire: '',
+        ayant_droit: '',
         observations: '',
       });
     } catch (err) {
@@ -182,9 +191,12 @@ const MesProduits = () => {
     productId: '',
     quantite: '',
     prixUnitaire: '',
+    detentaire: '',
+    ayant_droit: '',
     observations: '',
   });
   const [cpcOptions, setCpcOptions] = useState([]);
+  const [usersOptions, setUsersOptions] = useState([]);
   const [form, setForm] = useState({
     productState: '',
     codeCPC: '',
@@ -321,6 +333,31 @@ const MesProduits = () => {
       toast.error('Erreur lors du changement de stocké');
     } finally {
       setStockerLoadingId(null);
+    }
+  };
+
+  const [deleting, setDeleting] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const handleDeleteProduct = (id) => {
+    setDeleteId(id);
+    setDeleteOpen(true);
+  };
+
+  const confirmDeleteProduct = async () => {
+    setDeleting(true);
+    try {
+      const token = localStorage.getItem('token');
+      await deleteProduct(deleteId, token);
+      toast.success('Produit supprimé avec succès');
+      setDeleteOpen(false);
+      setDeleteId(null);
+      fetchProducts();
+    } catch (err) {
+      toast.error('Erreur lors de la suppression du produit');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -540,7 +577,7 @@ const MesProduits = () => {
                             <Button variant="ghost" size="sm" onClick={() => handleOpenEditModal(product._id)}>
                               <EditIcon className="w-5 h-5 text-amber-600" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleDeleteCpc(item.code)}>
+                            <Button variant="ghost" size="sm" onClick={() => handleDeleteProduct(product._id)}>
                               <DeleteIcon className="w-5 h-5 text-red-600" />
                             </Button>
                           </div>
@@ -666,6 +703,26 @@ const MesProduits = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Dialog Delete Product */}
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent aria-describedby="product-delete-desc">
+          <DialogHeader>
+            <DialogTitle>Supprimer le produit</DialogTitle>
+            <DialogDescription id="product-delete-desc">
+              Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <DialogClose asChild>
+              <Button variant="outline">Annuler</Button>
+            </DialogClose>
+            <Button variant="default" className="bg-red-600 text-white hover:bg-red-700" onClick={confirmDeleteProduct} disabled={deleting}>
+              {deleting ? 'Suppression...' : 'Confirmer la suppression'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Modal dépôt */}
       <Dialog open={depositModalOpen} onOpenChange={setDepositModalOpen}>
         <DialogContent className="bg-white border border-neutral-200">
@@ -707,6 +764,32 @@ const MesProduits = () => {
               <div className="space-y-2">
                 <Label htmlFor="prixUnitaire">Prix Unitaire</Label>
                 <Input name="prixUnitaire" value={depositForm.prixUnitaire} onChange={e => setDepositForm(f => ({ ...f, prixUnitaire: e.target.value }))} required placeholder="Prix Unitaire du produit" className="border-neutral-300" type="number" min="0" step="0.01" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="detentaire">Détentaire</Label>
+                <Select value={depositForm.detentaire} onValueChange={val => setDepositForm(f => ({ ...f, detentaire: val }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner le détenteur" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {usersOptions.map(user => (
+                      <SelectItem key={user._id} value={user._id}>{user.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ayant_droit">Ayant droit</Label>
+                <Select value={depositForm.ayant_droit} onValueChange={val => setDepositForm(f => ({ ...f, ayant_droit: val }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner l'ayant droit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {usersOptions.map(user => (
+                      <SelectItem key={user._id} value={user._id}>{user.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="observations">Observations</Label>
