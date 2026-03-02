@@ -60,7 +60,7 @@ export default function Login() {
         </p>
       </div>
       {/* Card with login form */}
-      <Card className="w-full max-w-md p-8 rounded-xl border border-neutral-200 bg-white">
+      <Card className="w-full max-w-md p-8 rounded-xl border border-neutral-200 bg-neutral-100">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
