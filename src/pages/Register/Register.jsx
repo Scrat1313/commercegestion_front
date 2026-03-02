@@ -18,7 +18,7 @@ import {
   validateDocumentType,
   validateIdentityCardNumber
 } from '../../utils/registerFieldControl.js';
-import LeafletMapPicker from '../../components/ui/LeafletMapPicker.jsx';
+import GoogleMapPicker from '../../components/ui/GoogleMapPicker.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import usePageTitle from '../../utils/usePageTitle.jsx';
 import { Button } from '../../components/ui/button.jsx';
@@ -377,7 +377,7 @@ const Register = () => {
                       Localisation sur la carte
                       <span className='text-red-400'>*</span>
                     </Label>
-                    <LeafletMapPicker lat={form.userMainLat} lng={form.userMainLng} onChange={({ lat, lng }) => setForm((prev) => ({ ...prev, userMainLat: lat, userMainLng: lng }))} />
+                    <GoogleMapPicker lat={form.userMainLat} lng={form.userMainLng} onChange={({ lat, lng }) => setForm((prev) => ({ ...prev, userMainLat: lat, userMainLng: lng }))} />
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="userMainLat">
