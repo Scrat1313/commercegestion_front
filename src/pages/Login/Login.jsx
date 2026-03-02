@@ -34,11 +34,17 @@ export default function Login() {
         toast.error("Votre rôle ne permet pas d'accéder à cette application.");
       }
     } catch (error) {
-      let apiMessage = error?.response?.data?.message;
-      if (apiMessage) {
-        toast.error(apiMessage);
-      } else if (error?.isAxiosError && error?.response?.status >= 400 && error?.response?.status < 500) {
-        toast.error('Erreur de connexion : identifiants invalides ou accès refusé.');
+      // Si la requête est bien celle du login (et pas du refresh)
+      if (error?.config?.url?.includes('/auth/login')) {
+        const apiMessage = error?.response?.data?.message;
+        if (apiMessage) {
+          toast.error(apiMessage);
+        } else {
+          toast.error('Identifiants invalides. Veuillez vérifier votre e-mail et votre mot de passe puis réessayer.');
+        }
+      } else if (error?.config?.url?.includes('/auth/refresh')) {
+        // Erreur de refresh, ne pas afficher le message login
+        toast.error('Session expirée, veuillez vous reconnecter.');
       } else if (error?.message && error?.message !== 'Session expirée') {
         toast.error(error.message);
       } else {
