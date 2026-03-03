@@ -200,9 +200,6 @@ export default function MonCompte() {
           <TabsContent value="profile">
             <Card className="p-6 border-neutral-200">
               <form onSubmit={handleUpdateProfile} className="space-y-4">
-
-
-
                 <div className="space-y-2">
                   <Label htmlFor="userNickName">Pseudo</Label>
                   <Input
@@ -245,9 +242,6 @@ export default function MonCompte() {
                     className="border-neutral-300"
                   />
                 </div>
-
-
-
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
