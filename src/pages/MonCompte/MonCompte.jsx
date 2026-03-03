@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { Switch } from '../../components/ui/switch';
 import { Person as UserIcon, Security as ShieldIcon, Notifications as BellIcon } from '@mui/icons-material';
 import { Badge } from '../../components/ui/badge';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export default function MonCompte() {
   usePageTitle('Mon compte');
@@ -199,6 +200,24 @@ export default function MonCompte() {
                     Non vérifié
                   </Badge>
                 )}
+                <div className="flex items-center gap-1">
+                  <Badge variant="outline" className="bg-neutral-50 text-neutral-700 border-neutral-200 px-2 py-1 text-xs font-mono">
+                    ID: {profile.userId}
+                  </Badge>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="p-1 h-6 w-6 text-neutral-500 hover:text-violet-600"
+                    onClick={() => {
+                      navigator.clipboard.writeText(profile.userId);
+                      toast.success('ID copié dans le presse-papier');
+                    }}
+                    aria-label="Copier l'ID utilisateur"
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
