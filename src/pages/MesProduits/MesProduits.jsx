@@ -205,7 +205,13 @@ const MesProduits = () => {
     observations: '',
   });
   const [cpcOptions, setCpcOptions] = useState([]);
+  const [cpcSearch, setCpcSearch] = useState('');
+  const [cpcOpen, setCpcOpen] = useState(false);
+  const [cpcHighlighted, setCpcHighlighted] = useState(0);
   const [usersOptions, setUsersOptions] = useState([]);
+  const [editCpcSearch, setEditCpcSearch] = useState('');
+  const [editCpcOpen, setEditCpcOpen] = useState(false);
+  const [editCpcHighlighted, setEditCpcHighlighted] = useState(0);
   const [form, setForm] = useState({
     productState: '',
     codeCPC: '',
@@ -229,6 +235,9 @@ const MesProduits = () => {
       codeCPC: code,
     }));
   };
+
+  const filteredCpcOptions = cpcOptions.filter(opt => opt.nom.toLowerCase().includes(cpcSearch.toLowerCase()));
+  const filteredEditCpcOptions = editCpcOptions.filter(opt => opt.nom.toLowerCase().includes(editCpcSearch.toLowerCase()));
 
   // Soumission du formulaire d'ajout
   const handleAddProduct = async (e) => {
@@ -273,11 +282,13 @@ const MesProduits = () => {
     if (addModalOpen) {
       getAllCpcSelect().then(res => {
         setCpcOptions(res.data || []);
+        setCpcSearch('');
       });
     }
     if (editModalOpen) {
       getAllCpcSelect().then(res => {
         setEditCpcOptions(res.data || []);
+        setEditCpcSearch('');
       });
     }
   }, [addModalOpen, editModalOpen]);
@@ -409,19 +420,64 @@ const MesProduits = () => {
                       <div className="col-span-1 md:col-span-2 flex gap-4">
                         <div className="space-y-2 flex-1">
                           <Label htmlFor="productCategory">Catégorie CPC</Label>
-                          <Select value={form.productCategory} onValueChange={val => {
-                            const selected = cpcOptions.find(opt => opt.nom === val);
-                            if (selected) handleCpcSelect(selected.id, selected.nom, selected.code);
-                          }}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Choisir la catégorie" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {cpcOptions.map(opt => (
-                                <SelectItem key={opt.id} value={opt.nom}>{opt.nom}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <div className="relative">
+                            <Input
+                              placeholder="Rechercher / Choisir une catégorie..."
+                              value={cpcSearch}
+                              onChange={e => { setCpcSearch(e.target.value); setCpcHighlighted(0); }}
+                              onFocus={() => { setCpcOpen(true); setCpcHighlighted(0); }}
+                              onBlur={() => setTimeout(() => setCpcOpen(false), 150)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Escape') return setCpcOpen(false);
+                                if (!cpcOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+                                  setCpcOpen(true);
+                                  e.preventDefault();
+                                  return;
+                                }
+                                if (cpcOpen) {
+                                  if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    setCpcHighlighted(i => Math.min(i + 1, Math.max(filteredCpcOptions.length - 1, 0)));
+                                  } else if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    setCpcHighlighted(i => Math.max(i - 1, 0));
+                                  } else if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    const opt = filteredCpcOptions[cpcHighlighted];
+                                    if (opt) {
+                                      handleCpcSelect(opt.id, opt.nom, opt.code);
+                                      setCpcSearch(opt.nom);
+                                      setCpcOpen(false);
+                                    }
+                                  }
+                                }
+                              }}
+                              className="w-full"
+                            />
+                            {cpcOpen && (
+                              <div className="absolute left-0 right-0 mt-1 bg-white border rounded shadow max-h-60 overflow-auto z-50">
+                                {filteredCpcOptions.length > 0 ? (
+                                  filteredCpcOptions.map((opt, idx) => (
+                                    <button
+                                      type="button"
+                                      key={opt.id}
+                                      onMouseEnter={() => setCpcHighlighted(idx)}
+                                      onClick={() => {
+                                        handleCpcSelect(opt.id, opt.nom, opt.code);
+                                        setCpcSearch(opt.nom);
+                                        setCpcOpen(false);
+                                      }}
+                                      className={`w-full text-left px-3 py-2 text-sm ${idx === cpcHighlighted ? 'bg-violet-50' : 'hover:bg-neutral-100'}`}
+                                    >
+                                      {opt.nom}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="px-3 py-2 text-sm text-neutral-500">Aucune catégorie</div>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
                         <div className="space-y-2 flex-1">
                           <Label htmlFor="codeCPC">Code CPC</Label>
@@ -641,26 +697,64 @@ const MesProduits = () => {
               <div className="col-span-1 md:col-span-2 flex gap-4">
                 <div className="space-y-2 flex-1">
                   <Label htmlFor="productCategory">Catégorie CPC</Label>
-                  <Select value={editForm.productCategory} onValueChange={val => {
-                    const selected = editCpcOptions.find(opt => opt.nom === val);
-                    if (selected) {
-                      setEditForm(f => ({
-                        ...f,
-                        productCategory: selected.nom,
-                        categoryId: selected.id,
-                        codeCPC: selected.code,
-                      }));
-                    }
-                  }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choisir la catégorie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {editCpcOptions.map(opt => (
-                        <SelectItem key={opt.id} value={opt.nom}>{opt.nom}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="relative">
+                    <Input
+                      placeholder="Rechercher / Choisir une catégorie..."
+                      value={editCpcSearch}
+                      onChange={e => { setEditCpcSearch(e.target.value); setEditCpcHighlighted(0); }}
+                      onFocus={() => { setEditCpcOpen(true); setEditCpcHighlighted(0); }}
+                      onBlur={() => setTimeout(() => setEditCpcOpen(false), 150)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') return setEditCpcOpen(false);
+                        if (!editCpcOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+                          setEditCpcOpen(true);
+                          e.preventDefault();
+                          return;
+                        }
+                        if (editCpcOpen) {
+                          if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            setEditCpcHighlighted(i => Math.min(i + 1, Math.max(filteredEditCpcOptions.length - 1, 0)));
+                          } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            setEditCpcHighlighted(i => Math.max(i - 1, 0));
+                          } else if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const opt = filteredEditCpcOptions[editCpcHighlighted];
+                            if (opt) {
+                              setEditForm(f => ({ ...f, productCategory: opt.nom, categoryId: opt.id, codeCPC: opt.code }));
+                              setEditCpcSearch(opt.nom);
+                              setEditCpcOpen(false);
+                            }
+                          }
+                        }
+                      }}
+                      className="w-full"
+                    />
+                    {editCpcOpen && (
+                      <div className="absolute left-0 right-0 mt-1 bg-white border rounded shadow max-h-60 overflow-auto z-50">
+                        {filteredEditCpcOptions.length > 0 ? (
+                          filteredEditCpcOptions.map((opt, idx) => (
+                            <button
+                              type="button"
+                              key={opt.id}
+                              onMouseEnter={() => setEditCpcHighlighted(idx)}
+                              onClick={() => {
+                                setEditForm(f => ({ ...f, productCategory: opt.nom, categoryId: opt.id, codeCPC: opt.code }));
+                                setEditCpcSearch(opt.nom);
+                                setEditCpcOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 text-sm ${idx === editCpcHighlighted ? 'bg-violet-50' : 'hover:bg-neutral-100'}`}
+                            >
+                              {opt.nom}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-3 py-2 text-sm text-neutral-500">Aucune catégorie</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2 flex-1">
                   <Label htmlFor="codeCPC">Code CPC</Label>
@@ -743,7 +837,7 @@ const MesProduits = () => {
           </DialogHeader>
           <form className="space-y-4" onSubmit={handleDepositSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+              <div className="space-  y-2">
                 <Label htmlFor="siteOrigineId">Site d'origine</Label>
                 <Select value={depositForm.siteOrigineId} onValueChange={val => setDepositForm(f => ({ ...f, siteOrigineId: val }))}>
                   <SelectTrigger>
@@ -836,7 +930,7 @@ const MesProduits = () => {
                   <div className="text-neutral-900 font-semibold mb-2">{detailProduct.productDescription}</div>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-neutral-700">
                     <div><b>Code CPC :</b> {detailProduct.codeCPC || '-'}</div>
-                    <div><b>État :</b> {detailProduct.productState || '-'}</div>
+                    {/* <div><b>État :</b> {detailProduct.productState || '-'}</div> */}
                     <div><b>Volume :</b> {detailProduct.productVolume || '-'}</div>
                     <div><b>Poids :</b> {detailProduct.productPoids || '-'}</div>
                     <div><b>Dimensions :</b> {detailProduct.productLongueur || '-'} x {detailProduct.productLargeur || '-'} x {detailProduct.productHauteur || '-'}</div>
