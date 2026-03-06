@@ -419,7 +419,7 @@ const MesProduits = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Catégorie CPC et Code CPC côte à côte */}
                       <div className="col-span-1 md:col-span-2 flex gap-4">
-                        <div className="space-y-2 flex-1">
+                        <div className="space-y-2 flex-2">
                           <Label htmlFor="productCategory">Catégorie CPC</Label>
                           <div className="relative">
                             <Input
@@ -480,12 +480,11 @@ const MesProduits = () => {
                             )}
                           </div>
                         </div>
-                        <div className="space-y-2 flex-1">
+                        <div className="space-y-2 flex-[0.7] min-w-30">
                           <Label htmlFor="codeCPC">Code CPC</Label>
                           <Input name="codeCPC" value={form.codeCPC} onChange={handleInputChange} required placeholder="01111" className="border-neutral-300" readOnly />
                         </div>
                       </div>
-                      {/* ...autres champs... */}
                       <div className="space-y-2">
                         <Label htmlFor="productName">Nom du produit</Label>
                         <Input name="productName" value={form.productName} onChange={handleInputChange} required placeholder="Blé dur de qualité supérieure" className="border-neutral-300" />
