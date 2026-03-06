@@ -98,7 +98,7 @@ const Boutique = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map(product => (
-            <Card key={product._id} className="border-neutral-200">
+            <Card key={product._id} className="border-neutral-200 bg-white">
               <CardHeader>
                 <img src={getFullMediaUrl(product.image)} alt={product.name} className="w-full h-40 object-cover rounded-xl mb-2" />
                 <CardTitle className="text-lg font-bold text-neutral-900 truncate">{product.name}</CardTitle>
