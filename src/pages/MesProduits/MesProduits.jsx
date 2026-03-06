@@ -100,7 +100,7 @@ const MesProduits = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
   const [editForm, setEditForm] = useState({
-    productState: '',
+    // productState: '',
     codeCPC: '',
     productVolume: '',
     productLargeur: '',
@@ -122,7 +122,7 @@ const MesProduits = () => {
       const res = await getProductById(productId, token);
       const data = Array.isArray(res.data) ? res.data[0] : res.data;
       setEditForm({
-        productState: data.productState || '',
+        // productState: data.productState || '',
         codeCPC: data.codeCPC || '',
         productVolume: data.productVolume || '',
         productLargeur: data.productLargeur || '',
@@ -148,7 +148,7 @@ const MesProduits = () => {
     try {
       // Remplacer par la fonction de modification réelle (updateProduct)
       await updateProduct(editProductId, {
-        productState: editForm.productState,
+        // productState: editForm.productState,
         codeCPC: editForm.codeCPC,
         productVolume: editForm.productVolume,
         productLargeur: editForm.productLargeur,
@@ -163,7 +163,7 @@ const MesProduits = () => {
       toast.success('Produit modifié avec succès');
       setEditModalOpen(false);
       setEditForm({
-        productState: '',
+        // productState: '',
         codeCPC: '',
         productVolume: '',
         productLargeur: '',
@@ -213,7 +213,7 @@ const MesProduits = () => {
   const [editCpcOpen, setEditCpcOpen] = useState(false);
   const [editCpcHighlighted, setEditCpcHighlighted] = useState(0);
   const [form, setForm] = useState({
-    productState: '',
+    // productState: '',
     codeCPC: '',
     productVolume: '',
     productLargeur: '',
@@ -245,7 +245,7 @@ const MesProduits = () => {
     const token = localStorage.getItem('token');
     try {
       await createProduct({
-        productState: form.productState,
+        // productState: form.productState,
         codeCPC: form.codeCPC,
         productVolume: form.productVolume,
         productLargeur: form.productLargeur,
@@ -260,7 +260,7 @@ const MesProduits = () => {
       toast.success('Produit ajouté avec succès');
       setAddModalOpen(false);
       setForm({
-        productState: '',
+        // productState: '',
         codeCPC: '',
         productVolume: '',
         productLargeur: '',
@@ -489,7 +489,7 @@ const MesProduits = () => {
                         <Label htmlFor="productName">Nom du produit</Label>
                         <Input name="productName" value={form.productName} onChange={handleInputChange} required placeholder="Blé dur de qualité supérieure" className="border-neutral-300" />
                       </div>
-                      <div className="space-y-2">
+                      {/* <div className="space-y-2">
                         <Label htmlFor="productState">État</Label>
                         <Select value={form.productState} onValueChange={val => setForm(f => ({ ...f, productState: val }))}>
                           <SelectTrigger>
@@ -501,7 +501,7 @@ const MesProduits = () => {
                             <SelectItem value="Transformé">Transformé</SelectItem>
                           </SelectContent>
                         </Select>
-                      </div>
+                      </div> */}
                       <div className="space-y-2">
                         <Label htmlFor="productVolume">Volume</Label>
                         <Input name="productVolume" value={form.productVolume} onChange={handleInputChange} required placeholder="1000 L" className="border-neutral-300" />
@@ -765,10 +765,10 @@ const MesProduits = () => {
                 <Label htmlFor="productName">Nom du produit</Label>
                 <Input name="productName" value={editForm.productName} onChange={handleEditInputChange} required placeholder="Nom du produit" className="border-neutral-300" />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="productState">État</Label>
                 <Input name="productState" value={editForm.productState} onChange={handleEditInputChange} required placeholder="État" className="border-neutral-300" />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="productVolume">Volume</Label>
                 <Input name="productVolume" value={editForm.productVolume} onChange={handleEditInputChange} required placeholder="Volume" className="border-neutral-300" />
