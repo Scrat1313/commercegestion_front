@@ -645,19 +645,42 @@ const MesProduits = () => {
                         </td>
                         <td className="p-4 text-sm text-neutral-600">{product.codeCPC || '-'}</td>
                         <td className="p-4 text-sm">
-                          <Button onClick={() => handleOpenDepositModal(product._id)} variant="outline" size="sm">
+                          <Button
+                            onClick={() => handleOpenDepositModal(product._id)}
+                            variant="outline"
+                            size="sm"
+                            disabled={product.isStocker}
+                            className={product.isStocker ? 'opacity-50 cursor-not-allowed' : ''}
+                          >
                             Ajouter à un dépôt
                           </Button>
                         </td>
                         <td className="p-4 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => handleShowDetail(product._id)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleShowDetail(product._id)}
+                            // Le bouton détail reste toujours actif
+                            >
                               <InfoIcon className="w-5 h-5 text-violet-600" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleOpenEditModal(product._id)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleOpenEditModal(product._id)}
+                              disabled={product.isStocker}
+                              className={product.isStocker ? 'opacity-50 cursor-not-allowed' : ''}
+                            >
                               <EditIcon className="w-5 h-5 text-amber-600" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleDeleteProduct(product._id)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteProduct(product._id)}
+                              disabled={product.isStocker}
+                              className={product.isStocker ? 'opacity-50 cursor-not-allowed' : ''}
+                            >
                               <DeleteIcon className="w-5 h-5 text-red-600" />
                             </Button>
                           </div>
