@@ -19,10 +19,10 @@ export const depositStock = async (params, token) => {
             siteOrigineId: params.siteOrigineId,
             siteDestinationId: params.siteDestinationId,
             productId: params.productId,
-            quantite: params.quantite,
+            quantite: Number(params.quantite),
             detentaire: params.detentaire,
             ayant_droit: params.ayant_droit,
-            prixUnitaire: params.prixUnitaire,
+            prixUnitaire: Number(params.prixUnitaire),
             observations: params.observations || '',
         },
         {

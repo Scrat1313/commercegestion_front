@@ -129,7 +129,13 @@ const Actifs = () => {
 		e.preventDefault();
 
 		try {
-			await withdrawStock(transferForm);
+			const payload = {
+				...transferForm,
+				quantite: Number(transferForm.quantite),
+				prixUnitaire: Number(transferForm.prixUnitaire),
+			};
+
+			await withdrawStock(payload);
 
 			toast.success('Transfert effectué');
 			setTransferModalOpen(false);
