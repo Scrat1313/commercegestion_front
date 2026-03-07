@@ -183,9 +183,11 @@ const Actifs = () => {
 										<th className="p-4 text-xs text-neutral-600 text-left">Image</th>
 										<th className="p-4 text-xs text-neutral-600 text-left">Site origine</th>
 										<th className="p-4 text-xs text-neutral-600 text-left">Site destination</th>
-										<th className="p-4 text-xs text-neutral-600 text-left">Qté</th>
-										<th className="p-4 text-xs text-neutral-600 text-left">PU</th>
-										<th className="p-4 text-xs text-neutral-600 text-left">Total</th>
+										<th className="p-4 text-xs text-neutral-600 text-right">Qté</th>
+										<th className="p-4 text-xs text-neutral-600 text-right">PU (Ar)</th>
+										<th className="p-4 text-xs text-neutral-600 text-right">Total (Ar)</th>
+										<th className="p-4 text-xs text-neutral-600 text-left">Détenteur</th>
+										<th className="p-4 text-xs text-neutral-600 text-left">Ayant droit</th>
 										<th className="p-4 text-xs text-neutral-600 text-left">Date</th>
 										<th className="p-4 text-xs text-neutral-600 text-right">Actions</th>
 									</tr>
@@ -224,11 +226,17 @@ const Actifs = () => {
 													{item.siteDestinationId?.siteName || '-'}
 												</td>
 
-												<td className="p-4 text-sm">{formatThousands(item.quantite)}</td>
-												<td className="p-4 text-sm">{formatThousands(item.prixUnitaire)}</td>
+												<td className="p-4 text-sm text-right">{formatThousands(item.quantite)}</td>
+												<td className="p-4 text-sm text-right">{formatThousands(item.prixUnitaire)}</td>
 
-												<td className="p-4 text-sm">
+												<td className="p-4 text-sm text-right">
 													{formatThousands(item.prixUnitaire * item.quantite)}
+												</td>
+												<td>
+													{item.détenteurId?.userName || '-'}
+												</td>
+												<td>
+													{item.ayant_droitId?.userName || '-'}
 												</td>
 
 												<td className="p-4 text-sm">
