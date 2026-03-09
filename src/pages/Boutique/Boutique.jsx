@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/ca
 import { Badge } from '../../components/ui/badge.jsx';
 import { Button } from '../../components/ui/button.jsx';
 import { useAuth } from '../../context/AuthContext';
+import { formatThousands } from '../../utils/formatNumber.js';
 import UserNotValidatedBanner from '../../components/commons/UserNotValidatedBanner.jsx';
 
 const sortOptions = [
@@ -48,13 +49,13 @@ const Boutique = () => {
 
   if (user && user.userValidated === false) {
     return (
-          <div className="px-6 mx-auto">
+      <div className="px-6 mx-auto">
         <UserNotValidatedBanner />
       </div>
     );
   }
   return (
-        <div className="px-6 mx-auto">
+    <div className="px-6 mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-neutral-900">Boutique</h1>
       <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
         <input
@@ -97,23 +98,39 @@ const Boutique = () => {
         <div className="text-center text-neutral-400 py-12">Aucun produit trouvé</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(product => (
-            <Card key={product._id} className="border-neutral-200 bg-white">
-              <CardHeader>
-                <img src={getFullMediaUrl(product.image)} alt={product.name} className="w-full h-40 object-cover rounded-xl mb-2" />
-                <CardTitle className="text-lg font-bold text-neutral-900 truncate">{product.name}</CardTitle>
-                {product.categoryNom && (
-                  <Badge variant="secondary" className="mt-1">{product.categoryNom}</Badge>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-2">
-                  <div className="text-sm text-neutral-700"><b>Code CPC:</b> {product.codeCPC || '-'}</div>
-                  <div className="text-sm text-neutral-700"><b>Propriétaire:</b> {product.ownerName || '-'}</div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {products.map(item => {
+            const product = item.produit || {};
+            const vendeur = item.vendeur || null;
+            const key = item.id || product._id;
+            return (
+              <Card key={key} className="border border-neutral-200 bg-white rounded-lg overflow-hidden">
+                <CardHeader className="p-0">
+                  <div className="relative">
+                    <img
+                      src={getFullMediaUrl(product.productImage)}
+                      alt={product.productName}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div className="absolute top-3 right-3 bg-white/95 text-sm text-neutral-900 px-2 py-1 rounded-md border border-neutral-200">
+                      {item.prixUnitaire != null ? `${formatThousands(item.prixUnitaire)} Ar` : '-'}
+                    </div>
+                  </div>
+                  <div className="px-4 py-3">
+                    <CardTitle className="text-lg font-semibold text-neutral-900 truncate mb-1">{product.productName}</CardTitle>
+                    {product.productCategory && (
+                      <Badge variant="secondary" className="mt-1">{product.productCategory}</Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-sm text-neutral-700"><span className="font-medium">Code CPC:</span> {product.codeCPC || '-'}</div>
+                    <div className="text-sm text-neutral-700"><span className="font-medium">Propriétaire:</span> {vendeur?.userNickName || product.productOwnerId || '-'}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
       <div className="flex justify-end items-center gap-4 mt-8">

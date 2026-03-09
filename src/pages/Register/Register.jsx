@@ -440,10 +440,10 @@ const Register = () => {
                           }}
                           enableSearch
                           containerClass="w-full"
-                          inputClass="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-input-background transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                          inputClass="border-neutral-300 w-full h-9 rounded-md px-3 py-1 text-base"
                           buttonClass="border-none bg-transparent px-2 flex items-center"
-                          dropdownClass="rounded-md border bg-input-background text-base shadow-lg z-50"
-                          searchClass="rounded-md border px-2 py-1 mb-2 w-full"
+                          dropdownClass="rounded-md bg-input-background text-base shadow-lg z-50"
+                          searchClass="rounded-md px-2 py-1 mb-2 w-full"
                           disableCountryCode={false}
                           disableDropdown={false}
                           masks={{ mg: '.. .. ... ..' }}
@@ -644,7 +644,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="border-neutral-300 w-full"
                               />
-                              {fieldErrors.carteStat && Array.isArray(fieldErrors.carteStat) && fieldErrors.carteStat.includes(`carte stat ${idx+1}`) && (
+                              {fieldErrors.carteStat && Array.isArray(fieldErrors.carteStat) && fieldErrors.carteStat.includes(`carte stat ${idx + 1}`) && (
                                 <span className="text-xs text-red-500 mt-1 flex items-center"><InfoOutlinedIcon fontSize="small" className="mr-1 inline" /> {fieldErrors.carteStat}</span>
                               )}
                               {form.carteStat && form.carteStat[idx] && (
