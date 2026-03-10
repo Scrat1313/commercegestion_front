@@ -238,11 +238,11 @@ const Actifs = () => {
 												<td className="p-4 text-sm text-right">
 													{formatThousands(item.prixUnitaire * item.quantite)}
 												</td>
-												<td>
-													{item.détenteurId?.userName || '-'}
+												<td className="p-4 text-sm">
+													{item.detentaire?.userName || '-'}
 												</td>
-												<td>
-													{item.ayant_droitId?.userName || '-'}
+												<td className="p-4 text-sm">
+													{item.ayant_droit?.userName || '-'}
 												</td>
 
 												<td className="p-4 text-sm">
