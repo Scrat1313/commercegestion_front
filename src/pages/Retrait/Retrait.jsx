@@ -137,8 +137,8 @@ function RetraitTableOrList({ loading, passifs, dateFormat, isDesktop }) {
 							<TableHead className="text-xs text-neutral-600">Image</TableHead>
 							<TableHead className="text-xs text-neutral-600">Départ</TableHead>
 							<TableHead className="text-xs text-neutral-600">Arrivée</TableHead>
-							<TableHead className="text-xs text-neutral-600">Quantité</TableHead>
-							<TableHead className="text-xs text-neutral-600">Prix unitaire</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Quantité</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Prix unitaire</TableHead>
 							<TableHead className="text-xs text-neutral-600">Type</TableHead>
 							<TableHead className="text-xs text-neutral-600">Détenteur</TableHead>
 							<TableHead className="text-xs text-neutral-600">Ayant droit</TableHead>
@@ -170,9 +170,9 @@ function RetraitTableOrList({ loading, passifs, dateFormat, isDesktop }) {
 									</TableCell>
 									<TableCell className="text-sm text-neutral-600">{depart}</TableCell>
 									<TableCell className="text-sm text-neutral-600">{arrivee}</TableCell>
-									<TableCell className="text-sm text-neutral-600">{quantite !== undefined && quantite !== null ? formatThousands(quantite) : '-'}</TableCell>
-									<TableCell className="text-sm text-neutral-600">{prixUnitaire !== null ? formatThousands(prixUnitaire) : '-'}</TableCell>
-									<TableCell className="text-sm text-neutral-600"><Badge variant={typeVariant}>{item.type || '-'}</Badge></TableCell>
+									<TableCell className="text-sm text-neutral-600 text-right">{quantite !== undefined && quantite !== null ? formatThousands(quantite) : '-'}</TableCell>
+									<TableCell className="text-sm text-neutral-600 text-right">{prixUnitaire !== null ? formatThousands(prixUnitaire) : '-'}</TableCell>
+									<TableCell className="text-sm text-neutral-600">{item.type || '-'}</TableCell>
 									<TableCell className="text-sm text-neutral-600">{detenteur}</TableCell>
 									<TableCell className="text-sm text-neutral-600">{ayantDroit}</TableCell>
 									<TableCell className="text-sm text-neutral-600">{date ? dateFormat(date) : '-'}</TableCell>

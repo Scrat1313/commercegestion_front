@@ -351,9 +351,9 @@ function ActifsTableOrList({ loading, actifs, dateFormat, isDesktop, onTransfer,
 							<TableHead className="text-xs text-neutral-600">Image</TableHead>
 							<TableHead className="text-xs text-neutral-600">Site origine</TableHead>
 							<TableHead className="text-xs text-neutral-600">Site destination</TableHead>
-							<TableHead className="text-xs text-neutral-600">Qté</TableHead>
-							<TableHead className="text-xs text-neutral-600">PU (Ar)</TableHead>
-							<TableHead className="text-xs text-neutral-600">Total (Ar)</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Qté</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">PU (Ar)</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Total (Ar)</TableHead>
 							<TableHead className="text-xs text-neutral-600">Détenteur</TableHead>
 							<TableHead className="text-xs text-neutral-600">Ayant droit</TableHead>
 							<TableHead className="text-xs text-neutral-600">Date</TableHead>

@@ -128,8 +128,8 @@ function DepotTableOrList({ loading, actifs, handleShowDetail, dateFormat }) {
 							<TableHead className="text-xs text-neutral-600">Image</TableHead>
 							<TableHead className="text-xs text-neutral-600">Site origine</TableHead>
 							<TableHead className="text-xs text-neutral-600">Site destination</TableHead>
-							<TableHead className="text-xs text-neutral-600">Quantité</TableHead>
-							<TableHead className="text-xs text-neutral-600">Prix unitaire</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Quantité</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right">Prix unitaire</TableHead>
 							<TableHead className="text-xs text-neutral-600">Type</TableHead>
 							<TableHead className="text-xs text-neutral-600">Date</TableHead>
 						</TableRow>
@@ -149,8 +149,8 @@ function DepotTableOrList({ loading, actifs, handleShowDetail, dateFormat }) {
 									</TableCell>
 									<TableCell className="text-sm text-neutral-600">{item.siteOrigineId?.siteName || '-'}</TableCell>
 									<TableCell className="text-sm text-neutral-600">{item.siteDestinationId?.siteName || '-'}</TableCell>
-									<TableCell className="text-sm text-neutral-600">{item.quantite !== undefined && item.quantite !== null ? formatThousands(item.quantite) : '-'}</TableCell>
-									<TableCell className="text-sm text-neutral-600">{item.prixUnitaire !== undefined && item.prixUnitaire !== null ? formatThousands(item.prixUnitaire) : '-'}</TableCell>
+									<TableCell className="text-sm text-neutral-600 text-right">{item.quantite !== undefined && item.quantite !== null ? formatThousands(item.quantite) : '-'}</TableCell>
+									<TableCell className="text-sm text-neutral-600 text-right">{item.prixUnitaire !== undefined && item.prixUnitaire !== null ? formatThousands(item.prixUnitaire) : '-'}</TableCell>
 									<TableCell className="text-sm text-neutral-600"><Badge variant={typeVariant}>{item.type || '-'}</Badge></TableCell>
 									<TableCell className="text-sm text-neutral-600">{item.createdAt ? dateFormat(item.createdAt) : '-'}</TableCell>
 								</TableRow>
