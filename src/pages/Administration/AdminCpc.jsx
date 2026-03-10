@@ -481,7 +481,7 @@ function CpcTableOrList({ loading, items, handleShowInfo, handleEditCpc, handleD
                             <div className="flex items-center gap-3">
                                 <div className="flex flex-col">
                                     <span className="font-bold text-neutral-900">{item.code}</span>
-                                    <span className="text-xs text-neutral-500 truncate">{item.nom}</span>
+                                    <span className="text-xs text-neutral-500 max-w-full wrap-break-words whitespace-normal">{item.nom}</span>
                                 </div>
                             </div>
                             <div className="mt-3 flex items-center gap-2 flex-wrap">

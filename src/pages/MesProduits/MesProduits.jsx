@@ -526,7 +526,7 @@ const MesProduits = () => {
                     <div className="text-sm font-medium text-neutral-900 truncate">{product.name}</div>
                     <div className="text-sm text-neutral-600">{product.codeCPC || '-'}</div>
                   </div>
-                  <div className="text-sm text-neutral-600 truncate">{product.categoryNom || '-'}</div>
+                  <div className="text-sm text-neutral-600 max-w-full wrap-break-words whitespace-normal">{product.categoryNom || '-'}</div>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge
                       variant={product.validation ? 'default' : 'secondary'}
