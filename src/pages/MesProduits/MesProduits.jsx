@@ -411,12 +411,12 @@ const MesProduits = () => {
     if (isDesktop) {
       return (
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="table-fixed">
             <TableHeader>
               <TableRow>
                 <TableHead className="text-left p-4 text-xs text-neutral-600">Aperçu</TableHead>
                 <TableHead className="text-left p-4 text-xs text-neutral-600">Nom</TableHead>
-                <TableHead className="text-left p-4 text-xs text-neutral-600">Catégorie</TableHead>
+                <TableHead className="text-left p-4 text-xs text-neutral-600 w-48">Catégorie</TableHead>
                 <TableHead className="text-left p-4 text-xs text-neutral-600">Validé</TableHead>
                 <TableHead className="text-left p-4 text-xs text-neutral-600">Code CPC</TableHead>
                 <TableHead className="text-left p-4 text-xs text-neutral-600">Déposer</TableHead>
@@ -439,7 +439,9 @@ const MesProduits = () => {
                       )}
                     </TableCell>
                     <TableCell className="p-4 text-sm text-neutral-900">{product.name}</TableCell>
-                    <TableCell className="p-4 text-sm text-neutral-600">{product.categoryNom || '-'}</TableCell>
+                    <TableCell className="p-4 text-sm text-neutral-600 w-48">
+                      <div className="w-48 truncate">{product.categoryNom || '-'}</div>
+                    </TableCell>
                     <TableCell className="p-4 text-sm">
                       <Badge
                         variant={product.validation ? 'default' : 'secondary'}
