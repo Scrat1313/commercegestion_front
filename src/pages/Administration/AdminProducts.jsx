@@ -329,7 +329,7 @@ function ProductTableOrList({ loading, products, handleAskValidate, handleShowDe
               <TableHead className="text-xs text-neutral-600">Aperçu</TableHead>
               <TableHead className="text-xs text-neutral-600">Nom</TableHead>
               <TableHead className="text-xs text-neutral-600">Catégorie</TableHead>
-              <TableHead className="text-xs text-neutral-600">Propriétaire</TableHead>
+              <TableHead className="text-xs text-neutral-600">Créateur</TableHead>
               <TableHead className="text-xs text-neutral-600">Stocké</TableHead>
               <TableHead className="text-xs text-neutral-600">Validé</TableHead>
               <TableHead className="text-xs text-neutral-600">Code CPC</TableHead>
