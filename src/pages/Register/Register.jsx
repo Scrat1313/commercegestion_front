@@ -80,8 +80,9 @@ const Register = () => {
       if (Array.isArray(dataToSend.documents)) {
         dataToSend.documents = dataToSend.documents.filter(f => f);
       }
-      await createUser(dataToSend);
-      toast.success('Inscription réussie !');
+      const res = await createUser(dataToSend);
+      const successMessage = res?.data?.message || res?.message || 'Inscription réussie !';
+      toast.success(successMessage);
       navigate('/login');
     } catch (error) {
       console.log('Erreur lors de l\'inscription :', error);
