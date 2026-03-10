@@ -19,6 +19,9 @@ const Retrait = () => {
 	const { user } = useAuth();
 	const dateFormat = useDateFormat();
 
+	// keep screen type at parent level so resize triggers parent re-render
+	const { isDesktop } = useScreenType();
+
 	usePageTitle('Retrait');
 
 	const [passifs, setPassifs] = useState([]);
@@ -84,7 +87,7 @@ const Retrait = () => {
 
 						{/* TABLEAU */}
 						<Card className="border-neutral-200 bg-white">
-							<RetraitTableOrList loading={loading} passifs={passifs} dateFormat={dateFormat} />
+							<RetraitTableOrList loading={loading} passifs={passifs} dateFormat={dateFormat} isDesktop={isDesktop} />
 						</Card>
 
 						{/* PAGINATION */}
@@ -118,8 +121,7 @@ const Retrait = () => {
 	);
 };
 
-function RetraitTableOrList({ loading, passifs, dateFormat }) {
-	const { isDesktop } = useScreenType();
+function RetraitTableOrList({ loading, passifs, dateFormat, isDesktop }) {
 
 	if (loading) return <div className="p-8 text-center text-neutral-400">Chargement...</div>;
 	if (!passifs || passifs.length === 0)
