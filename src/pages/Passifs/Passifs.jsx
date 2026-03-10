@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/button';
 import { getMyStocksPassifs, withdrawStock } from '../../services/stocks_move.service.js';
 import { getMySites } from '../../services/site.service';
 import usePageTitle from '../../utils/usePageTitle.jsx';
+import useScreenType from '../../utils/useScreenType';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader } from '../../components/ui/dialog';
 import useDateFormat from '../../utils/useDateFormat.jsx';
 import { useAuth } from '../../context/AuthContext';
@@ -21,6 +22,7 @@ import { Badge } from '../../components/ui/badge';
 
 const Passifs = () => {
 	const dateFormat = useDateFormat();
+	const { isDesktop } = useScreenType();
 	usePageTitle('Passifs');
 	const [passifs, setPassifs] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -164,73 +166,7 @@ const Passifs = () => {
 						/>
 					</div>
 					<Card className="border-neutral-200 bg-white">
-						<div className="overflow-x-auto">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead className="text-xs text-neutral-600">Produit</TableHead>
-										<TableHead className="text-xs text-neutral-600">Type</TableHead>
-										<TableHead className="text-xs text-neutral-600">Quantité</TableHead>
-										<TableHead className="text-xs text-neutral-600">Prix unitaire</TableHead>
-										<TableHead className="text-xs text-neutral-600">Montant</TableHead>
-										<TableHead className="text-xs text-neutral-600">Départ</TableHead>
-										<TableHead className="text-xs text-neutral-600">Arrivée</TableHead>
-										<TableHead className="text-xs text-neutral-600">Détenteur</TableHead>
-										<TableHead className="text-xs text-neutral-600">Ayant droit</TableHead>
-										<TableHead className="text-xs text-neutral-600">Date</TableHead>
-										<TableHead className="text-xs text-neutral-600 text-right p-4">Action</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{loading ? (
-										<TableRow>
-											<TableCell colSpan={11} className="p-8 text-center text-neutral-400">Chargement...</TableCell>
-										</TableRow>
-									) : passifs.length > 0 ? (
-										passifs.map((item, idx) => {
-											const produit = item.productId?.productName || item.productId?.codeCPC || '-';
-											const quantite = item.quantite ?? '-';
-											const prixUnitaire = item.prixUnitaire ?? null;
-											const montant = prixUnitaire !== null && quantite !== '-' ? quantite * prixUnitaire : null;
-											const depart = item.siteOrigineId?.siteName || item.siteOrigineId || '-';
-											const arrivee = item.siteDestinationId?.siteName || item.siteDestinationId || '-';
-											const detenteur = item.detentaire?.userNickName || item.operatorId?.userNickName || '-';
-											const ayantDroit = item.ayant_droit?.userNickName || '-';
-											const date = item.createdAt;
-											const typeVariant = item.type === 'RETRAIT' ? 'destructive' : item.type === 'DEPOT' ? 'secondary' : 'default';
-
-											return (
-												<TableRow key={idx}>
-													<TableCell className="text-sm">{produit}</TableCell>
-													<TableCell className="text-sm"><Badge variant={typeVariant}>{item.type || '-'}</Badge></TableCell>
-													<TableCell className="text-sm">{quantite}</TableCell>
-													<TableCell className="text-sm">{prixUnitaire !== null ? formatThousands(prixUnitaire) : '-'}</TableCell>
-													<TableCell className="text-sm">{montant !== null ? formatThousands(montant) : '-'}</TableCell>
-													<TableCell className="text-sm">{depart}</TableCell>
-													<TableCell className="text-sm">{arrivee}</TableCell>
-													<TableCell className="text-sm">{detenteur}</TableCell>
-													<TableCell className="text-sm">{ayantDroit}</TableCell>
-													<TableCell className="text-sm">{date ? dateFormat(date) : '-'}</TableCell>
-													<TableCell className="text-sm text-right">
-														<Button
-															onClick={() => handleOpenWithdrawModal(item)}
-															variant="outline"
-														>
-															<MoveUpIcon fontSize="small" className="mr-1" />
-															Retirer
-														</Button>
-													</TableCell>
-												</TableRow>
-											);
-										})
-									) : (
-										<TableRow>
-											<TableCell colSpan={11} className="p-8 text-center text-neutral-400">Aucun passif trouvé</TableCell>
-										</TableRow>
-									)}
-								</TableBody>
-							</Table>
-						</div>
+						<PassifsTableOrList loading={loading} passifs={passifs} dateFormat={dateFormat} isDesktop={isDesktop} onWithdraw={handleOpenWithdrawModal} />
 					</Card>
 					<div className="flex justify-end items-center gap-4 mt-4">
 						<Button
@@ -368,3 +304,109 @@ const Passifs = () => {
 	);
 };
 export default Passifs;
+
+function PassifsTableOrList({ loading, passifs, dateFormat, isDesktop, onWithdraw }) {
+	if (loading) return <div className="p-8 text-center text-neutral-400">Chargement...</div>;
+	if (!passifs || passifs.length === 0) return <div className="p-8 text-center text-neutral-400">Aucun passif trouvé</div>;
+
+	if (isDesktop) {
+		return (
+			<div className="overflow-x-auto">
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="text-xs text-neutral-600">Produit</TableHead>
+							<TableHead className="text-xs text-neutral-600">Type</TableHead>
+							<TableHead className="text-xs text-neutral-600">Quantité</TableHead>
+							<TableHead className="text-xs text-neutral-600">Prix unitaire</TableHead>
+							<TableHead className="text-xs text-neutral-600">Montant</TableHead>
+							<TableHead className="text-xs text-neutral-600">Départ</TableHead>
+							<TableHead className="text-xs text-neutral-600">Arrivée</TableHead>
+							<TableHead className="text-xs text-neutral-600">Détenteur</TableHead>
+							<TableHead className="text-xs text-neutral-600">Ayant droit</TableHead>
+							<TableHead className="text-xs text-neutral-600">Date</TableHead>
+							<TableHead className="text-xs text-neutral-600 text-right p-4">Action</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{passifs.map((item, idx) => {
+							const produit = item.productId?.productName || item.productId?.codeCPC || '-';
+							const quantite = item.quantite ?? '-';
+							const prixUnitaire = item.prixUnitaire ?? null;
+							const montant = prixUnitaire !== null && quantite !== '-' ? quantite * prixUnitaire : null;
+							const depart = item.siteOrigineId?.siteName || item.siteOrigineId || '-';
+							const arrivee = item.siteDestinationId?.siteName || item.siteDestinationId || '-';
+							const detenteur = item.detentaire?.userNickName || item.operatorId?.userNickName || '-';
+							const ayantDroit = item.ayant_droit?.userNickName || '-';
+							const date = item.createdAt;
+							const typeVariant = item.type === 'RETRAIT' ? 'destructive' : item.type === 'DEPOT' ? 'secondary' : 'default';
+
+							return (
+								<TableRow key={idx}>
+									<TableCell className="text-sm">{produit}</TableCell>
+									<TableCell className="text-sm"><Badge variant={typeVariant}>{item.type || '-'}</Badge></TableCell>
+									<TableCell className="text-sm">{quantite}</TableCell>
+									<TableCell className="text-sm">{prixUnitaire !== null ? formatThousands(prixUnitaire) : '-'}</TableCell>
+									<TableCell className="text-sm">{montant !== null ? formatThousands(montant) : '-'}</TableCell>
+									<TableCell className="text-sm">{depart}</TableCell>
+									<TableCell className="text-sm">{arrivee}</TableCell>
+									<TableCell className="text-sm">{detenteur}</TableCell>
+									<TableCell className="text-sm">{ayantDroit}</TableCell>
+									<TableCell className="text-sm">{date ? dateFormat(date) : '-'}</TableCell>
+									<TableCell className="text-sm text-right">
+										<Button onClick={() => onWithdraw(item)} variant="outline">
+											<MoveUpIcon fontSize="small" className="mr-1" />
+											Retirer
+										</Button>
+									</TableCell>
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
+			</div>
+		);
+	}
+
+	return (
+		<div className="space-y-3 p-4">
+			{passifs.map((item, idx) => {
+				const produit = item.productId?.productName || item.productId?.codeCPC || '-';
+				const quantite = item.quantite ?? '-';
+				const prixUnitaire = item.prixUnitaire ?? null;
+				const montant = prixUnitaire !== null && quantite !== '-' ? quantite * prixUnitaire : null;
+				const depart = item.siteOrigineId?.siteName || item.siteOrigineId || '-';
+				const arrivee = item.siteDestinationId?.siteName || item.siteDestinationId || '-';
+				const detenteur = item.detentaire?.userNickName || item.operatorId?.userNickName || '-';
+				const ayantDroit = item.ayant_droit?.userNickName || '-';
+				const date = item.createdAt;
+				const typeVariant = item.type === 'RETRAIT' ? 'destructive' : item.type === 'DEPOT' ? 'secondary' : 'default';
+
+				return (
+					<Card key={idx} className="p-4">
+						<div className="flex items-start justify-between gap-4">
+							<div className="flex-1 min-w-0">
+								<div className="font-medium text-neutral-900 truncate">{produit}</div>
+								<div className="text-xs text-neutral-500">{depart} → {arrivee}</div>
+								<div className="mt-2 flex flex-wrap gap-2 text-sm text-neutral-600">
+									<div>Quantité: {quantite !== undefined && quantite !== null ? formatThousands(quantite) : '-'}</div>
+									<div>Prix: {prixUnitaire !== null ? formatThousands(prixUnitaire) : '-'}</div>
+									<div>Montant: {montant !== null ? formatThousands(montant) : '-'}</div>
+									<div>Détenteur: {detenteur}</div>
+									<div>Ayant droit: {ayantDroit}</div>
+									<div>{date ? dateFormat(date) : '-'}</div>
+								</div>
+							</div>
+							<div className="flex flex-col items-end gap-2">
+								<Badge variant={typeVariant}>{item.type || '-'}</Badge>
+								<Button onClick={() => onWithdraw(item)} variant="outline" size="sm">
+									<MoveUpIcon fontSize="small" className="mr-1" /> Retirer
+								</Button>
+							</div>
+						</div>
+					</Card>
+				);
+			})}
+		</div>
+	);
+}
